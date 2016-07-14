@@ -2,12 +2,26 @@ hspec-stack-rerun
 =================
 
 this is a little utility for taking advantage of hspec's rerun capabilities
-from within stack --file-watch.
+from within stack --file-watch. Waiting for all your tests to pass
+when you're drilled in is a huge waste of time, and you fall out of
+the groove (or end up making a coffee) a lot of the time. hspec
+--rerun is great for this, as it keeps track of the currently failing
+tests and runs them before doing a full rerun.
 
-Usually, this is only possible within ghci, as hspec saves the failed
-tests in an environment variable - unfortunately, stack operates by
-building a new binary each time, so the information is lost, as
-described at https://github.com/commercialhaskell/stack/issues/1928
+stack build --test --file-watch is similarly great, as it watches all
+the important files in your project (including any on-disk
+dependencies), and rebuilds when necessary.
+
+Unfortunately, hspec --rerun only works within ghci, as hspec saves
+the failed tests in an environment variable, and stack operates by
+building a new binary each time. This combines the best of both, by
+stashing the failed tests in a file you specify.
+
+Background
+==========
+
+this was inspired by
+https://github.com/commercialhaskell/stack/issues/1928
 
 The ghcid-based solution on that page works and is very fast, but if
 you have any on-disk dependencies in your stack.yaml, ghcid will not
