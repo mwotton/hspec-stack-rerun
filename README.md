@@ -32,10 +32,10 @@ or write the whole thing out by hand if you want to drive stick.
 Then, your actual test Main.hs should look like this:
 
 ```
-import Spec
+import qualified.Spec
 import qualified Rerun
 
-main = Rerun.main spec
+main = Rerun.main Spec.main
 ```
 
 Finally, you have to define a file to stash the results in. This is
