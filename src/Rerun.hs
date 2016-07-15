@@ -1,3 +1,4 @@
+{-# LANGUAGE RankNTypes          #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 module Rerun where
 
@@ -17,13 +18,11 @@ import           Test.Hspec.Runner
 --   comes from HSPEC_FAILURES_FILE).
 
 main clientSpec = do
+  logPutStrLn <- getPrinter
 
-  logPrint <- do
-    debug <- lookupEnv "HSPEC_STACK_RERUN_DEBUG"
-    return $ case debug of
-      Nothing -> const $ return ()
-      Just _  -> print
   let
+    logPrint :: Show a => a -> IO ()
+    logPrint = logPutStrLn . show
     -- LAZY IO IS THE DEVIL
     safeReadFile :: FilePath -> IO (Maybe String)
     safeReadFile fs = logAndIgnore Nothing $ do
@@ -74,3 +73,10 @@ main clientSpec = do
       (Just stash,Nothing,Just newset) ->
         writeFile stash newset
       _ -> return ()
+
+getPrinter :: IO (String -> IO ())
+getPrinter = do
+    debug <- lookupEnv "HSPEC_STACK_RERUN_DEBUG"
+    return $ case debug of
+      Nothing -> (\_ -> return ())
+      Just _  -> putStrLn
