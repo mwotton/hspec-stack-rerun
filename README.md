@@ -1,3 +1,12 @@
+DEPRECATED
+==========
+
+HSpec has these features built-in now: just run
+
+```
+stack build --file-watch --test --test-arguments '--rerun --failure-report=TESTREPORT --rerun-all-on-success'
+```
+
 hspec-stack-rerun
 =================
 
